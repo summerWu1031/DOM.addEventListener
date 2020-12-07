@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="div1">123</div>
+
+    <script>
+        setTimeout(()=>{
+            const button = document.createElement('button')
+            button.textContent='click1'
+            div1.appendChild(button)
+        },1000)
+
+
+
+        on('click','#div1','button',()=>{
+            console.log('button被点击了');
+        })
+
+        function on(eventType,element,selector,fn){
+            console.log(element);//'#div1'
+            if(!(element instanceof Element)){ //如果是选择器的话，就需要变成变为元素
+                element= document.querySelector(element);
+            }
+            console.log(element);//null
+            element.addEventListener(eventType,(e)=>{
+                const t = e.target
+                if(t.matches(selector)){
+                    fn(e)
+                }
+            })
+        }
+
+
+        function on(eventType,element,selector,fn){
+            if(!(element instanceof Element)){
+                element = document.querySelector(element)
+            }
+            element.addEventListener(eventType,(e)=>{
+                const t =e.target
+                while(!t.matches(selector)){
+                    if(t===element){
+                        t=null
+                        break
+                    }
+                    t=t.parentNode
+                }
+                t&&fn.call(t,e,t) //如果t存在，则执行函数
+            })
+            return element
+        }
+
+    </script>
+</body>
+</html>
